@@ -1,0 +1,226 @@
+import re
+
+# User Registration
+
+def register():
+    #Open Text file with read mode
+    db = open("Registration.txt","r")
+
+    #Email Creation For New User
+
+    #Email Condition
+    email_condition = '([\D]{3,12}[0-9]*)@[\D]{3,7}\.([\D]{2,5})$'
+
+    #Getting Input
+    email_id = input("\t Enter Email-ID : ")
+
+    #Checking Already Exist Mail
+    email_exist=[]
+    for i in db:
+      check_cond=i.split(",")
+      email_exist.append(check_cond[0])
+
+    if email_id in email_exist:
+        print()
+        print("\t Email Exists, Please Try Other Names ")
+        print()
+        print()
+        register()
+        return False
+
+    #Checking Condition
+     
+    if(re.fullmatch(email_condition, email_id)):
+        print()
+        print("\t Email Created")
+        print()
+        print()
+
+    else:
+        print()
+        print("\t Invalid E-mail ")
+        print()
+        print("\t Email Format ---@---.--")
+        print()
+        print()
+        
+        while(email_id != email_condition):
+          print("\t Press 1 and Register again ")
+          print("\t -------------------------- ")
+          print( )
+          return False
+          
+                         
+    # Password Creation For New User
+    password=input("\t Enter Password : ")
+    print()
+
+    #lowercase as l, upper_case as u, Special_character as s, Digits as d 
+    l, u, s, d = 0, 0, 0, 0
+
+    if (len(password) >= 5 and len(password) <= 16):
+        for i in password:
+ 
+          # counting lowercase alphabets
+          if (i.islower()):
+              l+=1           
+ 
+          # counting uppercase alphabets
+          if (i.isupper()):
+              u+=1           
+ 
+          # counting digits
+          if (i.isdigit()):
+              d+=1           
+ 
+          # counting the mentioned special characters
+          if(i=='@'or i=='$' or i=='_' or i=='!' or i=='#' or i=='&' or i=='^'):
+              s+=1
+              
+              #checking condition
+    password_condition = (l>=1 and u>=1 and s>=1 and d>=1 and l+s+u+d==len(password))
+    #if (l>=1 and u>=1 and s>=1 and d>=1 and l+s+u+d==len(password)):
+              
+    if(password_condition):
+        print("\t Password Created")
+        print()
+        print()
+        #print("\t Successfully Registered")
+        
+
+        #Open File In Append Mode
+        db=open("Registration.txt","a")
+        db.write(email_id + "," + password + "\n")
+        print()
+        print("\t ***  Successfully  Registered !!!  *** ")
+        print()
+        print()
+        print ("______________________________________________________________________________________")
+        db.close()
+        return False
+
+    else:
+        print()
+        print("\t Invalid Password ")
+        print()
+        print("\t Password length is min 5 max 16 with the combination of A-Z,a-b,0-9,[@$_!#&^] ")
+        print()
+        print()
+        print("\t  *** Please Register Again ***")
+        return False
+
+    
+           
+# User Login With Registred Email-ID and Password
+
+def login():
+  email_id=input(" Enter E-mail ID : ")
+  print()
+  password=input(" Enter Password  : ")
+  db= open("Registration.txt",'r')
+  read_obj=db.readlines()
+  count=0
+  for i in read_obj:
+      i=i.strip('\n')
+      info=i.split(',')
+      res= email_id == info[0] and password==info[1]
+      ls=[]
+      #print(ls)
+      if res:
+        ls.append(res)
+      if(len(ls)>0):
+        #print(ls)
+        count=count+1
+        #print(count)
+        
+  if(count>0):
+    print()
+    print()
+    print("\t  *** Logged In Successfully !!!  ***")
+    print()
+    print()
+    print ("______________________________________________________________________________________")
+  
+  else:
+    print()
+    print()
+    print("\t  *** E-mail Id or Password is wrong. *** ")
+    print()
+    print()
+    print ("______________________________________________________________________________________")
+
+  db.close()
+
+
+# Password Retrive with user email
+def forget_password():
+  print()
+  email=input(" Enter Registered Email :")
+  print()
+  db=open("Registration.txt","r")
+  chk_pwd = db.readlines()
+  count=0
+  for i in chk_pwd:
+    i = i.strip("\n")
+    chk_valid_pwd = i.split(",")
+    res= (email == chk_valid_pwd[0])
+    ls=[]
+    if res:
+      ls.append(chk_valid_pwd[1])
+      if(len(ls)>0):
+        count=count+1
+        print(" Your Password Is   : ",*ls)
+        #print(count)
+  
+  if(count<=0):
+    print()
+    print()
+    print("\t  ***  Sorry, You Are Not Registered Yet ...  *** ")
+        
+  db.close()
+
+
+while 1:
+
+  print()
+  print()
+  print("     REGISTRATION AND LOGIN SYSTEM     ")
+  print("     *****************************     ")
+  print()
+  print(" Enter Your Choice As 1 or 2 or 3 or 4 ")
+  print()
+  print(" 1. Register")
+  print(" 2. Login")
+  print(" 3. Retrieve Password")
+  print(" 4. Exit")
+  print()
+
+  #getting choice as ch
+  print()
+  ch=input(" Enter Your Choice : ")
+  print()
+
+  #checking choice condition
+  if ch=='1':
+    print()
+    print("\t ******* Welcome To Registration ******* ")
+    print()
+    register()
+
+  elif ch=='2':
+      print()
+      print("\t ******* Welcome Back !!! ******* ")
+      print()
+      login()
+
+  elif ch=='3':
+    print()
+    print("\t *** Forgot Your Password? Please Enter Correct E-mail ***")
+    forget_password()
+
+  elif ch=='4':
+    break
+
+  else:
+    print("\n Enter Correct Choice As 1 or 2 or 3 or 4 \n ") 
+
